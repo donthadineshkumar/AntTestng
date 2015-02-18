@@ -1,0 +1,11 @@
+
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
+<suite name="Testing Ant Suite"> 
+	<test name="Test one">
+		<classes>
+			<class name="com.testng.basic.TestOne"></class>
+			<class name="com.testng.basic.TestTwo"></class>
+		</classes>
+	</test>
+
+</suite>

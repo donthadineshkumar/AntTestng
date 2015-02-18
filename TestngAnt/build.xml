@@ -1,0 +1,84 @@
+<project name="testng-ant-build" default="test" basedir=".">
+
+	<description>
+		Simple Example Build File	
+	</description>
+
+	<!--set this global properties for this build -->
+	<property name="src" location="src">
+	</property>
+	<property name="build" location="build" />
+	<property name="dist" location="dist" />
+	<property name="classpath" location="lib" />
+	<property name="buildname" value="TestNG" />
+	<property name="test.src.dir" value="${src}" />
+	<property name="testng.reports.dir" value="${build}/reports">
+	</property>
+	<property name="testngjar" value="/home/dinesh/Downloads/JavaDownloads/jars_zips/testng.jar" />
+	<property name="guicejar" value="/home/dinesh/Downloads/JavaDownloads/jars_zips/guice-3.0.jar" />
+	<property name="reportngdir" value="/home/dinesh/Downloads/JavaDownloads/jars_zips/reportng-1.1.4/" />
+
+	<path id="classpath">
+		<pathelement location="${build}/classes"/>
+		<fileset dir="${build}/lib">
+			<include name="**/*.jar"/>
+		</fileset>
+	</path>
+
+	<!--<path id="jarspath">
+		<fileset dir="${build}/lib">
+			<include name="**/*.jar"/>
+		</fileset>
+	</path> -->
+
+
+
+	<!--	<target name="all" depends="send-mail" /> -->
+
+	<target name="init">
+		<delete dir="${build}" />
+		<delete dir="${dist}" />
+	</target>
+
+	<target name="create" depends="init">
+		<mkdir dir="${build}" />
+		<mkdir dir="${build}/classes" />
+		<mkdir dir="${build}/lib" />
+		<mkdir dir="${dist}" />
+	</target>
+
+	<!-- ================================= 
+          target: copyjars              
+         ================================= -->
+	<target name="copyjars" depends="create" description="description">
+		<copy file="${testngjar}" todir="${build}/lib" />
+		<copy file="${guicejar}" todir="${build}/lib" />
+		<copy todir="${build}/lib">
+			<fileset dir="${reportngdir}">
+				<include name="**/*.jar" />
+			</fileset>
+		</copy>
+	</target>
+
+
+	<target name="compile" depends="copyjars" description="compiles the source">
+		<javac includeantruntime="true" srcdir="${src}" destdir="${build}/classes" classpathref="classpath" debug="on">
+		</javac>
+	</target>
+
+	<taskdef resource="testngtasks" classpathref="classpath"/>
+
+	<target name="test" depends="compile">
+		<testng outputdir="${testng.reports.dir}" 
+			classpathref="classpath"
+			usedefaultlisteners="true"
+			listeners="org.uncommons.reportng.HTMLReporter,org.uncommons.reportng.JUnitXMLReporter">
+			<xmlfileset dir="${basedir}" includes="testng.xml" />
+			<sysproperty key="org.uncommons.reportng.title" value="My Test Report"/>
+		</testng>
+	</target>
+
+
+
+
+</project>
